@@ -1,20 +1,32 @@
 'use client';
 
-import {useAppSelector} from '@/store/store.hooks';
-import {FC, useEffect, useState} from 'react';
+import {useAppDispatch, useAppSelector} from '@/store/store.hooks';
+import {FC, useCallback, useEffect, useState} from 'react';
 import {Table, withTableActions, withTableSorting} from '@gravity-ui/uikit';
-import type {TableDataItem} from '@gravity-ui/uikit';
 import {PencilToSquare, TrashBin} from '@gravity-ui/icons';
+import {
+    Showplace,
+    deleteShowplace,
+    setActivePlaceId,
+    toggleModalOpen,
+} from '@/store/showplaces.slice';
 
-const TableWithSorting = withTableSorting<TableDataItem>(Table);
-const TableWithSortingAndActions = withTableActions<TableDataItem>(TableWithSorting);
+const TableWithSorting = withTableSorting<Showplace>(Table);
+const TableWithSortingAndActions = withTableActions<Showplace>(TableWithSorting);
 
-interface PlacesListProps {}
+const columns = [
+    {id: 'name', name: 'Name', meta: {sort: true}},
+    {id: 'location', name: 'Location', meta: {sort: true}},
+    {id: 'rating', name: 'Rating', meta: {sort: true}},
+    {id: 'status', name: 'Status'},
+];
 
-export const PlacesList: FC<PlacesListProps> = () => {
+export const PlacesList: FC = () => {
     const [isClient, setIsClient] = useState(false);
 
     const {places, isLoading, error, adminMode} = useAppSelector((state) => state.showplaces);
+
+    const dispatch = useAppDispatch();
 
     console.log(places);
 
@@ -22,28 +34,26 @@ export const PlacesList: FC<PlacesListProps> = () => {
         setIsClient(true);
     }, []);
 
-    const columns = [
-        {id: 'name', name: 'Name', meta: {sort: true}},
-        {id: 'location', name: 'Location', meta: {sort: true}},
-        {id: 'rating', name: 'Rating', meta: {sort: true}},
-        {id: 'status', name: 'Status'},
-    ];
-
-    const getRowActions = () => {
+    const getRowActions = useCallback(() => {
         return [
             {
                 text: 'Edit',
-                icon: <TrashBin />,
-                handler: () => {},
+                icon: <PencilToSquare />,
+                handler: (item: Showplace) => {
+                    dispatch(setActivePlaceId(item.id));
+                    dispatch(toggleModalOpen());
+                },
             },
             {
                 text: 'Remove',
-                icon: <PencilToSquare />,
-                handler: () => {},
+                icon: <TrashBin />,
+                handler: (item: Showplace) => {
+                    dispatch(deleteShowplace(item.id));
+                },
                 theme: 'danger' as const,
             },
         ];
-    };
+    }, []);
 
     if (!isClient) {
         return <div className="g-table g-table_with-sticky-scroll" />;

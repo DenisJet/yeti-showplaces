@@ -1,0 +1,16 @@
+$block: '.form';
+
+#{$block} {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+
+  &__buttons {
+    display: flex;
+    gap: 10px;
+  }
+}

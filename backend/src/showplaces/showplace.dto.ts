@@ -17,14 +17,12 @@ export class CreateShowplaceDto {
   description: string;
 
   @IsNumber()
-  @IsNotEmpty()
   rating: number;
 
   @IsUrl()
   imageUrl: string;
 
   @IsString()
-  @IsNotEmpty()
   location: string;
 
   @IsLatitude()
