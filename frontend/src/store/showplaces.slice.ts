@@ -11,8 +11,8 @@ export interface Showplace {
     rating: number;
     imageUrl: string;
     location: string;
-    latitude: number;
-    longitude: number;
+    latitude: string;
+    longitude: string;
     mapLink: string;
     status: 'planned' | 'visited';
 }

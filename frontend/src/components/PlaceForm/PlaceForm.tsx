@@ -21,8 +21,8 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
         description: '',
         imageUrl: '',
         location: '',
-        latitude: 0,
-        longitude: 0,
+        latitude: '',
+        longitude: '',
         rating: 0,
         mapLink: '',
         status: 'planned',
@@ -36,8 +36,8 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
             description: '',
             imageUrl: '',
             location: '',
-            latitude: 0,
-            longitude: 0,
+            latitude: '',
+            longitude: '',
             rating: 0,
             mapLink: '',
             status: 'planned',
@@ -133,12 +133,12 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
             <TextInput
                 label="Широта"
                 value={formData.latitude.toString()}
-                onChange={(e) => setFormData({...formData, latitude: parseFloat(e.target.value)})}
+                onChange={(e) => setFormData({...formData, latitude: e.target.value})}
             />
             <TextInput
                 label="Долгота"
                 value={formData.longitude.toString()}
-                onChange={(e) => setFormData({...formData, longitude: parseFloat(e.target.value)})}
+                onChange={(e) => setFormData({...formData, longitude: e.target.value})}
             />
             {placeId && (
                 <TextInput
