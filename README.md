@@ -10,6 +10,8 @@ cd frontend => npm i => npm run dev
 
 Базовый URL - http://localhost:3000
 
+#### Методы
+
 1. Получить список достопримечательностей
 
 - Метод: GET
@@ -81,7 +83,6 @@ cd frontend => npm i => npm run dev
   \```
   {
   "name": "Обновленное название",
-
   "rating": 4,
   "status": "visited"
   }

@@ -12,6 +12,8 @@ interface PlaceFormProps {
 
 const b = block('form');
 
+const COORDINATE_REGEX = /^-?\d{1,3}(\.\d+)?$/;
+
 export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
     const {activePlace} = useAppSelector((state) => state.showplaces);
     const dispatch = useAppDispatch();
@@ -59,6 +61,18 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
             newErrors.location = 'Местоположение обязательно';
         }
 
+        if (!formData.latitude.trim()) {
+            newErrors.latitude = 'Широта обязательна';
+        } else if (!COORDINATE_REGEX.test(formData.latitude)) {
+            newErrors.latitude = 'Неверный формат широты (пример: 48.8584)';
+        }
+
+        if (!formData.longitude.trim()) {
+            newErrors.longitude = 'Долгота обязательна';
+        } else if (!COORDINATE_REGEX.test(formData.longitude)) {
+            newErrors.longitude = 'Неверный формат долготы (пример: 2.2945)';
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -69,6 +83,16 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
         }
     }, [activePlace, placeId]);
 
+    const handleCoordinateChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        field: 'latitude' | 'longitude',
+    ) => {
+        const value = e.target.value;
+        if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
+            setFormData({...formData, [field]: value});
+        }
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -76,21 +100,22 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
             return;
         }
 
+        const payload = {
+            ...formData,
+            latitude: parseFloat(formData.latitude).toFixed(6),
+            longitude: parseFloat(formData.longitude).toFixed(6),
+            mapLink: `https://maps.google.com/?q=${formData.latitude},${formData.longitude}`,
+        };
+
         if (placeId) {
-            dispatch(
-                updateShowplace({
-                    ...formData,
-                    mapLink: `https://maps.google.com/?q=${formData.latitude}, ${formData.longitude}`,
-                } as Showplace),
-            );
+            dispatch(updateShowplace(payload as Showplace));
             onCancel();
         } else {
             dispatch(
                 addShowplace({
-                    ...formData,
+                    ...payload,
                     status: 'planned',
                     createdAt: new Date().toISOString(),
-                    mapLink: `https://maps.google.com/?q=${formData.latitude}, ${formData.longitude}`,
                 }),
             );
             onCancel();
@@ -107,7 +132,6 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
                 errorMessage={errors.name}
                 validationState={errors.name ? 'invalid' : undefined}
-                errorPlacement="inside"
             />
             <TextArea
                 placeholder="Описание"
@@ -128,17 +152,22 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
                 onChange={(e) => setFormData({...formData, location: e.target.value})}
                 errorMessage={errors.location}
                 validationState={errors.location ? 'invalid' : undefined}
-                errorPlacement="inside"
             />
             <TextInput
                 label="Широта"
-                value={formData.latitude.toString()}
-                onChange={(e) => setFormData({...formData, latitude: e.target.value})}
+                placeholder="0.0"
+                value={formData.latitude}
+                onChange={(e) => handleCoordinateChange(e, 'latitude')}
+                errorMessage={errors.latitude}
+                validationState={errors.latitude ? 'invalid' : undefined}
             />
             <TextInput
                 label="Долгота"
-                value={formData.longitude.toString()}
-                onChange={(e) => setFormData({...formData, longitude: e.target.value})}
+                placeholder="0.0"
+                value={formData.longitude}
+                onChange={(e) => handleCoordinateChange(e, 'longitude')}
+                errorMessage={errors.longitude}
+                validationState={errors.longitude ? 'invalid' : undefined}
             />
             {placeId && (
                 <TextInput
