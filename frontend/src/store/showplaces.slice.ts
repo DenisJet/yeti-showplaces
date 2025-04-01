@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -11,6 +12,7 @@ export interface Showplace {
     location: string;
     latitude: number;
     longitude: number;
+    mapLink: string;
     status: 'planned' | 'visited';
 }
 
@@ -80,8 +82,7 @@ const showplacesSlice = createSlice({
     initialState,
     reducers: {
         toggleAdminMode(state) {
-            // state.adminMode = !state.adminMode;
-            return {...state, adminMode: !state.adminMode};
+            state.adminMode = !state.adminMode;
         },
         toggleHideVisited(state) {
             state.hideVisited = !state.hideVisited;

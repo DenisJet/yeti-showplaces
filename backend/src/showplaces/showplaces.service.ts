@@ -27,6 +27,7 @@ export class ShowplacesService {
           location: 'Париж, Франция',
           latitude: 48.8584,
           longitude: 2.2945,
+          mapLink: 'https://maps.google.com/?q=48.8584,2.2945',
           status: 'planned',
         },
         {
@@ -37,6 +38,7 @@ export class ShowplacesService {
           location: 'Рим, Италия',
           latitude: 41.8902,
           longitude: 12.4924,
+          mapLink: 'https://maps.google.com/?q=41.8902,12.4924',
           status: 'planned',
         },
         {
@@ -47,6 +49,7 @@ export class ShowplacesService {
           location: 'Нью-Йорк, США',
           latitude: 40.6892,
           longitude: -74.0445,
+          mapLink: 'https://maps.google.com/?q=40.6892,-74.0445',
           status: 'visited',
         },
         {
@@ -57,6 +60,7 @@ export class ShowplacesService {
           location: 'Китай',
           latitude: 40.4319,
           longitude: 116.5704,
+          mapLink: 'https://maps.google.com/?q=40.4319,116.5704',
           status: 'planned',
         },
         {
@@ -68,6 +72,7 @@ export class ShowplacesService {
           location: 'Перу',
           latitude: -13.1631,
           longitude: -72.545,
+          mapLink: 'https://maps.google.com/?q=-13.1631,-72.545',
           status: 'planned',
         },
         {
@@ -78,6 +83,7 @@ export class ShowplacesService {
           location: 'Агра, Индия',
           latitude: 27.1751,
           longitude: 78.0421,
+          mapLink: 'https://maps.google.com/?q=27.1751,78.0421',
           status: 'planned',
         },
         {
@@ -88,6 +94,7 @@ export class ShowplacesService {
           location: 'Гиза, Египет',
           latitude: 29.9792,
           longitude: 31.1342,
+          mapLink: 'https://maps.google.com/?q=29.9792,31.1342',
           status: 'planned',
         },
         {
@@ -98,6 +105,7 @@ export class ShowplacesService {
           location: 'Хунань, Китай',
           latitude: 29.3916,
           longitude: 110.6341,
+          mapLink: 'https://maps.google.com/?q=29.3916,110.6341',
           status: 'planned',
         },
         {
@@ -108,6 +116,7 @@ export class ShowplacesService {
           location: 'Москва, Россия',
           latitude: 55.7525,
           longitude: 37.6231,
+          mapLink: 'https://maps.google.com/?q=55.7525,37.6231',
           status: 'visited',
         },
         {
@@ -118,6 +127,7 @@ export class ShowplacesService {
           location: 'Сидней, Австралия',
           latitude: -33.8568,
           longitude: 151.2153,
+          mapLink: 'https://maps.google.com/?q=-33.8568,151.2153',
           status: 'planned',
         },
       ];

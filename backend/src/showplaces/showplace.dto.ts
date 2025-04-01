@@ -23,6 +23,7 @@ export class CreateShowplaceDto {
   imageUrl: string;
 
   @IsString()
+  @IsNotEmpty()
   location: string;
 
   @IsLatitude()
@@ -30,6 +31,9 @@ export class CreateShowplaceDto {
 
   @IsLongitude()
   longitude: number;
+
+  @IsUrl()
+  mapLink: string;
 
   @IsIn(['planned', 'visited'])
   status: 'planned' | 'visited' = 'planned';

@@ -18,7 +18,7 @@ const columns = [
     {id: 'name', name: 'Name', meta: {sort: true}},
     {id: 'location', name: 'Location', meta: {sort: true}},
     {id: 'rating', name: 'Rating', meta: {sort: true}},
-    {id: 'status', name: 'Status'},
+    {id: 'status', name: 'Status', meta: {sort: true}},
 ];
 
 export const PlacesList: FC = () => {
@@ -26,9 +26,9 @@ export const PlacesList: FC = () => {
 
     const {places, isLoading, error, adminMode} = useAppSelector((state) => state.showplaces);
 
-    const dispatch = useAppDispatch();
-
     console.log(places);
+
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         setIsClient(true);

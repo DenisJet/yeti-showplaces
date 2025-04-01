@@ -16,6 +16,11 @@ $block: '.wrapper';
         justify-content: space-between;
         align-items: center;
     }
+    
+    &__theme {
+        margin-left: auto;
+        margin-right: 0;
+    }
 
     &__theme-button {
         margin-left: 20px;

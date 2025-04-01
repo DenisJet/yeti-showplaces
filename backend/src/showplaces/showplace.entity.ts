@@ -29,6 +29,9 @@ export class Showplace {
   @Column('float')
   longitude: number;
 
+  @Column()
+  mapLink: string;
+
   @Column({ default: 'planned' })
   status: 'planned' | 'visited';
 }

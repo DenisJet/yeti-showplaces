@@ -16,7 +16,7 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
     const {activePlace} = useAppSelector((state) => state.showplaces);
     const dispatch = useAppDispatch();
 
-    const [formData, setFormData] = useState<Omit<Showplace, 'id' | 'createdAt' | 'status'>>({
+    const [formData, setFormData] = useState<Omit<Showplace, 'id' | 'createdAt'>>({
         name: '',
         description: '',
         imageUrl: '',
@@ -24,7 +24,11 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
         latitude: 0,
         longitude: 0,
         rating: 0,
+        mapLink: '',
+        status: 'planned',
     });
+
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
         setFormData({
@@ -35,6 +39,8 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
             latitude: 0,
             longitude: 0,
             rating: 0,
+            mapLink: '',
+            status: 'planned',
         });
 
         if (placeId) {
@@ -42,37 +48,66 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
         }
     }, [placeId, dispatch]);
 
+    const validateForm = (): boolean => {
+        const newErrors: Record<string, string> = {};
+
+        if (!formData.name.trim()) {
+            newErrors.name = 'Название обязательно';
+        }
+
+        if (!formData.location.trim()) {
+            newErrors.location = 'Местоположение обязательно';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     useEffect(() => {
         if (activePlace && activePlace.id === placeId) {
             setFormData(activePlace);
         }
     }, [activePlace, placeId]);
 
-    console.log('activePlace', activePlace);
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
+
         if (placeId) {
-            dispatch(updateShowplace(formData as Showplace));
-            onCancel();
-            console.log(formData);
-        } else {
             dispatch(
-                addShowplace({...formData, status: 'planned', createdAt: new Date().toISOString()}),
+                updateShowplace({
+                    ...formData,
+                    mapLink: `https://maps.google.com/?q=${formData.latitude}, ${formData.longitude}`,
+                } as Showplace),
             );
             onCancel();
-            console.log({...formData, createdAt: new Date().toISOString()});
+        } else {
+            dispatch(
+                addShowplace({
+                    ...formData,
+                    status: 'planned',
+                    createdAt: new Date().toISOString(),
+                    mapLink: `https://maps.google.com/?q=${formData.latitude}, ${formData.longitude}`,
+                }),
+            );
+            onCancel();
         }
     };
 
     return (
         <form onSubmit={handleSubmit} className={b()}>
-            <h2>Создание достопримечательности</h2>
+            <h2>{placeId ? 'Редактирование' : 'Создание'}</h2>
             <TextInput
                 label="Название"
                 placeholder="Название"
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
+                errorMessage={errors.name}
+                validationState={errors.name ? 'invalid' : undefined}
+                errorPlacement="inside"
             />
             <TextArea
                 placeholder="Описание"
@@ -81,14 +116,19 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
             />
             <TextInput
+                label="Фото URL"
                 placeholder="Фото URL"
                 value={formData.imageUrl}
                 onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
             />
             <TextInput
+                label="Местоположение"
                 placeholder="Местоположение"
                 value={formData.location}
                 onChange={(e) => setFormData({...formData, location: e.target.value})}
+                errorMessage={errors.location}
+                validationState={errors.location ? 'invalid' : undefined}
+                errorPlacement="inside"
             />
             <TextInput
                 label="Широта"
@@ -100,6 +140,13 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
                 value={formData.longitude.toString()}
                 onChange={(e) => setFormData({...formData, longitude: parseFloat(e.target.value)})}
             />
+            {placeId && (
+                <TextInput
+                    label="Ссылка"
+                    value={formData.mapLink}
+                    onChange={(e) => setFormData({...formData, mapLink: e.target.value})}
+                />
+            )}
             <Select
                 label="Рейтинг"
                 value={[formData.rating.toString()]}
@@ -109,8 +156,21 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
                     content: num.toString(),
                 }))}
             />
+            {placeId && (
+                <Select
+                    label="Статус"
+                    value={[formData.status]}
+                    onUpdate={(val) =>
+                        setFormData({...formData, status: val[0] as 'planned' | 'visited'})
+                    }
+                    options={[
+                        {value: 'planned', content: 'В планах'},
+                        {value: 'visited', content: 'Осмотрена'},
+                    ]}
+                />
+            )}
             <div className={b('buttons')}>
-                <Button type="submit">Создать</Button>
+                <Button type="submit">Сохранить</Button>
                 <Button onClick={onCancel}>Отмена</Button>
             </div>
         </form>

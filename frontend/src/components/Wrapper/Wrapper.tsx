@@ -43,10 +43,12 @@ export const Wrapper: FC<WrapperProps> = ({children}) => {
         <ThemeProvider theme={theme}>
             <div className={b()}>
                 <div className={b('controls')}>
-                    <Button view="action" size="m" onClick={handleModalClose}>
-                        Add new place
-                    </Button>
-                    <div>
+                    {adminMode && (
+                        <Button view="action" size="m" onClick={handleModalClose}>
+                            Add new place
+                        </Button>
+                    )}
+                    <div className={b('theme')}>
                         <Switch size="m" checked={adminMode} onChange={handleModeChange}>
                             Admin mode
                         </Switch>
