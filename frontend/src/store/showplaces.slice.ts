@@ -105,61 +105,42 @@ const showplacesSlice = createSlice({
             })
             .addCase(fetchAllShowplaces.fulfilled, (state, action) => {
                 state.isLoading = false;
+                state.error = null;
                 state.places = action.payload;
             })
             .addCase(fetchAllShowplaces.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.message || 'Failed to load places';
             })
-            .addCase(fetchShowplace.pending, (state) => {
-                state.isLoading = true;
-                state.error = null;
-            })
             .addCase(fetchShowplace.fulfilled, (state, action) => {
-                state.isLoading = false;
+                state.error = null;
                 state.activePlace = action.payload;
             })
             .addCase(fetchShowplace.rejected, (state, action) => {
-                state.isLoading = false;
                 state.error = action.error.message || 'Failed to load place';
             })
-            .addCase(addShowplace.pending, (state) => {
-                state.isLoading = true;
-                state.error = null;
-            })
             .addCase(addShowplace.fulfilled, (state, action) => {
-                state.isLoading = false;
+                state.error = null;
                 state.places.push(action.payload);
             })
             .addCase(addShowplace.rejected, (state, action) => {
-                state.isLoading = false;
                 state.error = action.error.message || 'Failed to create place';
             })
-            .addCase(updateShowplace.pending, (state) => {
-                state.isLoading = true;
-                state.error = null;
-            })
             .addCase(updateShowplace.fulfilled, (state, action) => {
-                state.isLoading = false;
+                state.error = null;
                 const index = state.places.findIndex((place) => place.id === action.payload.id);
                 if (index !== -1) {
                     state.places[index] = action.payload;
                 }
             })
             .addCase(updateShowplace.rejected, (state, action) => {
-                state.isLoading = false;
                 state.error = action.error.message || 'Failed to update place';
             })
-            .addCase(deleteShowplace.pending, (state) => {
-                state.isLoading = true;
-                state.error = null;
-            })
             .addCase(deleteShowplace.fulfilled, (state, action) => {
-                state.isLoading = false;
+                state.error = null;
                 state.places = state.places.filter((place) => place.id !== action.payload);
             })
             .addCase(deleteShowplace.rejected, (state, action) => {
-                state.isLoading = false;
                 state.error = action.error.message || 'Failed to delete place';
             });
     },
