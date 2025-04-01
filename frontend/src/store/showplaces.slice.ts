@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+import {toaster} from '@gravity-ui/uikit/toaster-singleton';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -111,37 +112,69 @@ const showplacesSlice = createSlice({
             .addCase(fetchAllShowplaces.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.message || 'Failed to load places';
+                toaster.add({
+                    title: 'Не загрузить данные',
+                    name: 'Не загрузить данные',
+                    theme: 'danger',
+                });
             })
             .addCase(fetchShowplace.fulfilled, (state, action) => {
-                state.error = null;
                 state.activePlace = action.payload;
             })
-            .addCase(fetchShowplace.rejected, (state, action) => {
-                state.error = action.error.message || 'Failed to load place';
+            .addCase(fetchShowplace.rejected, () => {
+                toaster.add({
+                    title: 'Не удалось загрузить данные',
+                    name: 'Не удалось загрузить данные',
+                    theme: 'danger',
+                });
             })
             .addCase(addShowplace.fulfilled, (state, action) => {
-                state.error = null;
                 state.places.push(action.payload);
+                toaster.add({
+                    title: 'Успешно создано',
+                    name: 'Успешно создано',
+                    theme: 'success',
+                });
             })
-            .addCase(addShowplace.rejected, (state, action) => {
-                state.error = action.error.message || 'Failed to create place';
+            .addCase(addShowplace.rejected, () => {
+                toaster.add({
+                    title: 'Не удалось создать',
+                    name: 'Не удалось создать',
+                    theme: 'danger',
+                });
             })
             .addCase(updateShowplace.fulfilled, (state, action) => {
-                state.error = null;
                 const index = state.places.findIndex((place) => place.id === action.payload.id);
                 if (index !== -1) {
                     state.places[index] = action.payload;
                 }
+                toaster.add({
+                    title: 'Успешно обновлено',
+                    name: 'Успешно обновлено',
+                    theme: 'success',
+                });
             })
-            .addCase(updateShowplace.rejected, (state, action) => {
-                state.error = action.error.message || 'Failed to update place';
+            .addCase(updateShowplace.rejected, () => {
+                toaster.add({
+                    title: 'Не удалось обновить',
+                    name: 'Не удалось обновить',
+                    theme: 'danger',
+                });
             })
             .addCase(deleteShowplace.fulfilled, (state, action) => {
-                state.error = null;
                 state.places = state.places.filter((place) => place.id !== action.payload);
+                toaster.add({
+                    title: 'Успешно удалено',
+                    name: 'Успешно удалено',
+                    theme: 'success',
+                });
             })
-            .addCase(deleteShowplace.rejected, (state, action) => {
-                state.error = action.error.message || 'Failed to delete place';
+            .addCase(deleteShowplace.rejected, () => {
+                toaster.add({
+                    title: 'Не удалось удалить',
+                    name: 'Не удалось удалить',
+                    theme: 'danger',
+                });
             });
     },
 });

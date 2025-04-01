@@ -2,7 +2,17 @@
 
 import {FC, ReactNode, useState} from 'react';
 import block from 'bem-cn-lite';
-import {Button, Icon, Modal, Switch, Theme, ThemeProvider} from '@gravity-ui/uikit';
+import {
+    Button,
+    Icon,
+    Modal,
+    Switch,
+    Theme,
+    ThemeProvider,
+    ToasterComponent,
+    ToasterProvider,
+} from '@gravity-ui/uikit';
+import {toaster} from '@gravity-ui/uikit/toaster-singleton';
 import {Moon, Sun} from '@gravity-ui/icons';
 
 import './Wrapper.scss';
@@ -41,36 +51,39 @@ export const Wrapper: FC<WrapperProps> = ({children}) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <div className={b()}>
-                <div className={b('controls')}>
-                    {adminMode && (
-                        <Button view="action" size="m" onClick={handleModalClose}>
-                            Add new place
-                        </Button>
-                    )}
-                    <div className={b('theme')}>
-                        <Switch size="m" checked={adminMode} onChange={handleModeChange}>
-                            Admin mode
-                        </Switch>
-                        <Button
-                            size="l"
-                            view="outlined"
-                            onClick={() => {
-                                setTheme(isDark ? LIGHT : DARK);
-                            }}
-                            className={b('theme-button')}
-                        >
-                            <Icon data={isDark ? Sun : Moon} />
-                        </Button>
+            <ToasterProvider toaster={toaster}>
+                <div className={b()}>
+                    <div className={b('controls')}>
+                        {adminMode && (
+                            <Button view="action" size="m" onClick={handleModalClose}>
+                                Add new place
+                            </Button>
+                        )}
+                        <div className={b('theme')}>
+                            <Switch size="m" checked={adminMode} onChange={handleModeChange}>
+                                Admin mode
+                            </Switch>
+                            <Button
+                                size="l"
+                                view="outlined"
+                                onClick={() => {
+                                    setTheme(isDark ? LIGHT : DARK);
+                                }}
+                                className={b('theme-button')}
+                            >
+                                <Icon data={isDark ? Sun : Moon} />
+                            </Button>
+                        </div>
+                    </div>
+                    <div className={b('layout')}>
+                        <div className={b('content')}>{children}</div>
                     </div>
                 </div>
-                <div className={b('layout')}>
-                    <div className={b('content')}>{children}</div>
-                </div>
-            </div>
-            <Modal open={modalOpen} onClose={handleModalClose}>
-                <PlaceForm placeId={activePlaceId ?? undefined} onCancel={handleModalClose} />
-            </Modal>
+                <Modal open={modalOpen} onClose={handleModalClose}>
+                    <PlaceForm placeId={activePlaceId ?? undefined} onCancel={handleModalClose} />
+                </Modal>
+                <ToasterComponent />
+            </ToasterProvider>
         </ThemeProvider>
     );
 };

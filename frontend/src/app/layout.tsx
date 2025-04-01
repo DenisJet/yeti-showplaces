@@ -1,6 +1,5 @@
 import type {Metadata} from 'next';
-import {DEFAULT_BODY_CLASSNAME} from '../components/Wrapper';
-import {App} from '../components/App';
+import {DEFAULT_BODY_CLASSNAME, Wrapper} from '../components/Wrapper';
 
 import '@gravity-ui/uikit/styles/fonts.css';
 import '@gravity-ui/uikit/styles/styles.css';
@@ -17,7 +16,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <html lang="en">
             <body className={DEFAULT_BODY_CLASSNAME}>
                 <StoreProvider>
-                    <App>{children}</App>
+                    <Wrapper>{children}</Wrapper>
                 </StoreProvider>
             </body>
         </html>
