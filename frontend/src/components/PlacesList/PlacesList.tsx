@@ -93,7 +93,7 @@ export const PlacesList: FC = () => {
                 <span>Places count: {filteredPlaces.length}</span>
                 <Search />
                 <Checkbox
-                    size="l"
+                    size="m"
                     checked={hideVisited}
                     onChange={() => dispatch(toggleHideVisited())}
                 >
@@ -105,6 +105,7 @@ export const PlacesList: FC = () => {
                 columns={columns}
                 stickyHorizontalScroll={true}
                 getRowActions={adminMode ? getRowActions : undefined}
+                width="max"
             />
         </>
     );
