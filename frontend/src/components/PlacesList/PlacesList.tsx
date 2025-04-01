@@ -1,15 +1,21 @@
 'use client';
 
 import {useAppDispatch, useAppSelector} from '@/store/store.hooks';
-import {FC, useCallback, useEffect, useState} from 'react';
-import {Table, withTableActions, withTableSorting} from '@gravity-ui/uikit';
+import {FC, useCallback, useEffect, useMemo, useState} from 'react';
+import {Checkbox, Table, withTableActions, withTableSorting} from '@gravity-ui/uikit';
 import {PencilToSquare, TrashBin} from '@gravity-ui/icons';
 import {
     Showplace,
     deleteShowplace,
     setActivePlaceId,
+    toggleHideVisited,
     toggleModalOpen,
 } from '@/store/showplaces.slice';
+import {Search} from '../Search';
+import './PlacesList.scss';
+import block from 'bem-cn-lite';
+
+const b = block('placesList');
 
 const TableWithSorting = withTableSorting<Showplace>(Table);
 const TableWithSortingAndActions = withTableActions<Showplace>(TableWithSorting);
@@ -24,9 +30,9 @@ const columns = [
 export const PlacesList: FC = () => {
     const [isClient, setIsClient] = useState(false);
 
-    const {places, isLoading, error, adminMode} = useAppSelector((state) => state.showplaces);
-
-    console.log(places);
+    const {places, isLoading, error, adminMode, searchQuery, hideVisited} = useAppSelector(
+        (state) => state.showplaces,
+    );
 
     const dispatch = useAppDispatch();
 
@@ -55,6 +61,25 @@ export const PlacesList: FC = () => {
         ];
     }, []);
 
+    const filteredPlaces = useMemo(() => {
+        let result = [...places];
+
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            result = result.filter(
+                (place) =>
+                    place.name.toLowerCase().startsWith(query) ||
+                    place.location.toLowerCase().startsWith(query),
+            );
+        }
+
+        if (hideVisited) {
+            result = result.filter((place) => place.status !== 'visited');
+        }
+
+        return result;
+    }, [places, searchQuery, hideVisited]);
+
     if (!isClient) {
         return <div className="g-table g-table_with-sticky-scroll" />;
     }
@@ -64,9 +89,19 @@ export const PlacesList: FC = () => {
 
     return (
         <>
-            <div>Places count: {places.length}</div>
+            <div className={b('controls')}>
+                <span>Places count: {filteredPlaces.length}</span>
+                <Search />
+                <Checkbox
+                    size="l"
+                    checked={hideVisited}
+                    onChange={() => dispatch(toggleHideVisited())}
+                >
+                    <span>Hide visited</span>
+                </Checkbox>
+            </div>
             <TableWithSortingAndActions
-                data={places}
+                data={filteredPlaces}
                 columns={columns}
                 stickyHorizontalScroll={true}
                 getRowActions={adminMode ? getRowActions : undefined}
