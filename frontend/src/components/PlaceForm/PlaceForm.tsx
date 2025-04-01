@@ -171,6 +171,7 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
             />
             {placeId && (
                 <TextInput
+                    disabled
                     label="Ссылка"
                     value={formData.mapLink}
                     onChange={(e) => setFormData({...formData, mapLink: e.target.value})}
