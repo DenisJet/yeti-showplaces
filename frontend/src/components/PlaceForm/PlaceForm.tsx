@@ -61,13 +61,13 @@ export const PlaceForm: FC<PlaceFormProps> = ({onCancel, placeId}) => {
             newErrors.location = 'Местоположение обязательно';
         }
 
-        if (!formData.latitude.trim()) {
+        if (!formData.latitude) {
             newErrors.latitude = 'Широта обязательна';
         } else if (!COORDINATE_REGEX.test(formData.latitude)) {
             newErrors.latitude = 'Неверный формат широты (пример: 48.8584)';
         }
 
-        if (!formData.longitude.trim()) {
+        if (!formData.longitude) {
             newErrors.longitude = 'Долгота обязательна';
         } else if (!COORDINATE_REGEX.test(formData.longitude)) {
             newErrors.longitude = 'Неверный формат долготы (пример: 2.2945)';
